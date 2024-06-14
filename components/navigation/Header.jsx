@@ -10,8 +10,10 @@ const Header = () => {
   useEffect(() => {});
 
   return (
-    <div className=" flex p-6 items-center justify-between shadow-sm">
-      <h1 className="text-primary text-3xl font-bold">Interview Sathi</h1>
+    <div className=" flex p-5 md:px-20 items-center justify-between shadow-sm">
+      <h1 className="text-primary text-xl lg:text-3xl  font-bold">
+        Interview Sathi
+      </h1>
       <ul className="hidden md:flex  gap-6">
         <li
           className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
