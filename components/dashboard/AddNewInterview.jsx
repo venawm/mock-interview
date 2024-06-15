@@ -8,10 +8,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import toast from "react-hot-toast";
+import { chatSession } from "@/utils/GeminiAiModel";
+import { LoaderCircle } from "lucide-react";
+import { db } from "@/utils/db";
+import { MockInterview } from "@/utils/schema";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment/moment";
 
 const AddNewInterview = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -20,6 +27,9 @@ const AddNewInterview = () => {
     stack: "",
     experience: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [jsonResponse, setJsonResponse] = useState([]);
+  const { user } = useUser();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -32,9 +42,13 @@ const AddNewInterview = () => {
     setInterviewData((prevData) => ({ ...prevData, [id]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setLoading(true);
     const { position, stack, experience } = interviewData;
-
+    if (position.trim().length === 0) {
+      toast.error("Job position cannot be empty");
+      return;
+    }
     if (!/^[0-9]+$/.test(experience)) {
       toast.error("Experience must be a positive number");
       return;
@@ -48,13 +62,45 @@ const AddNewInterview = () => {
       return;
     }
 
+    const inputPrompt = `Job Position:${position}, Job Description:${stack},Years of Expericence:${experience}. Depending on the Job position, Description and years of experiecne give me 5 interview questions along with answer in JSON format. Give me question and answer field on JSON`;
+
+    const result = await chatSession.sendMessage(inputPrompt);
+    console.log(result.response.text());
+    const MockJsonResp = result.response
+      .text()
+      .replace("```json", "")
+      .replace("```", "");
+    console.log(JSON.parse(MockJsonResp));
     // Reset the interview data
+
+    setJsonResponse(MockJsonResp);
+
+    if (!MockJsonResp) {
+      toast.error("Error while parsing data please enter correct values");
+      return;
+    }
+    const res = await db
+      .insert(MockInterview)
+      .values({
+        mockId: uuidv4(),
+        jsonMockResp: MockJsonResp,
+        jobPosition: position,
+        jobDesc: stack,
+        jobExp: experience,
+        createdBy: user.primaryEmailAddress.emailAddress,
+        createdAt: moment().format("DD-MM-YYYY"),
+      })
+      .returning({ mockId: MockInterview.mockId });
+
+    console.log("Inserted Id", res);
+
+    setLoading(false);
     setInterviewData({
       position: "",
       stack: "",
       experience: "",
     });
-    setOpenDialog(false); // Close the dialog after submitting
+    // setOpenDialog(false); // Close the dialog after submitting
   };
 
   return (
@@ -83,10 +129,10 @@ const AddNewInterview = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="stack">Tech Stack</label>
+                  <label htmlFor="stack">Job Description</label>
                   <Textarea
                     id="stack"
-                    placeholder="Ex. React, Angular, Java, Kotlin etc."
+                    placeholder="Ex.Develop and maintain web applications using Java and React."
                     onChange={handleChange}
                   />
                 </div>
@@ -108,7 +154,16 @@ const AddNewInterview = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleSubmit}>Start</Button>
+              <Button onClick={handleSubmit} disabled={loading}>
+                {loading ? (
+                  <>
+                    <LoaderCircle className=" animate-spin" />
+                    Generating From Ai
+                  </>
+                ) : (
+                  "Start Interview"
+                )}
+              </Button>
             </div>
           </DialogHeader>
         </DialogContent>
