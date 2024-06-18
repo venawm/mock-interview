@@ -5,6 +5,7 @@ import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
 import { eq, param } from "drizzle-orm";
 import { Lightbulb, WebcamIcon } from "lucide-react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import Webcam from "react-webcam";
@@ -64,7 +65,7 @@ const Interview = ({ params }) => {
             </h2>
           </div>
         </div>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-2">
           {webCamEnabled ? (
             <Webcam
               height={300}
@@ -96,7 +97,9 @@ const Interview = ({ params }) => {
               </Button>
             </div>
           )}
-          <Button>Start</Button>
+          <Link href={`/dashboard/interview/${params.id}/start`}>
+            <Button className="w-64">Start</Button>
+          </Link>
         </div>
       </div>
     </div>
