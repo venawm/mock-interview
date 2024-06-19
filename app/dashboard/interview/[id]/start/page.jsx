@@ -26,6 +26,7 @@ const StartInterview = ({ params }) => {
     const res = JSON.parse(result[0].jsonMockResp);
     setInterviewData(result[0]);
     setInterviewQuestion(res);
+    console.log("hehe");
   };
   return (
     <div>
@@ -39,6 +40,7 @@ const StartInterview = ({ params }) => {
           userAnswer={userAnswer}
           interviewData={interviewData}
           mockId={params.id}
+          getInterviewDetails={getInterviewDetails}
         />
         {/* Webcam */}
         <RecordAnswer />
