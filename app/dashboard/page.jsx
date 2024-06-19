@@ -1,3 +1,4 @@
+"use client";
 import AddNewInterview from "@/components/dashboard/AddNewInterview";
 import React from "react";
 

@@ -12,6 +12,7 @@ const StartInterview = ({ params }) => {
   const [interviewData, setInterviewData] = useState();
   const [interviewQuestion, setInterviewQuestion] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [userAnswer, setUserAnswer] = useState("");
   useEffect(() => {
     getInterviewDetails();
   }, []);
@@ -34,6 +35,10 @@ const StartInterview = ({ params }) => {
           interviewQuestion={interviewQuestion}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
+          setUserAnswer={setUserAnswer}
+          userAnswer={userAnswer}
+          interviewData={interviewData}
+          mockId={params.id}
         />
         {/* Webcam */}
         <RecordAnswer />

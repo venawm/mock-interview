@@ -68,7 +68,7 @@ module.exports = {
         },
         wiggle: {
           "0%, 100%": { transform: "scale(1)" },
-          "50%": { transform: "scale(1.2)" },
+          "50%": { transform: "scale(1.01)" },
         },
       },
       animation: {
