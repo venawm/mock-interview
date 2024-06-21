@@ -43,7 +43,9 @@ const Interview = ({ params }) => {
             </h2>
             <h2>
               <strong>Experience: </strong>
-              <span className=" capitalize">{interviewData?.jobExp} </span>
+              <span className=" capitalize">
+                {interviewData?.jobExp} Years{" "}
+              </span>
             </h2>
           </div>
           <div className="bg-green-100 p-2 rounded-md text-primary">
