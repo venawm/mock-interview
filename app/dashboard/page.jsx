@@ -1,5 +1,6 @@
 "use client";
 import AddNewInterview from "@/components/dashboard/AddNewInterview";
+import InterviewList from "@/components/interview/InterviewList";
 import React from "react";
 
 const Dashboard = () => {
@@ -10,6 +11,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 my-5">
         <AddNewInterview />
       </div>
+      <InterviewList />
     </div>
   );
 };

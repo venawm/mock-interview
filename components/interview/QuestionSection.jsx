@@ -62,17 +62,6 @@ const QuestionSection = ({
     }
   };
 
-  const textToSpeech = (text) => {
-    if ("speechSynthesis" in window) {
-      const speech = new SpeechSynthesisUtterance(text);
-      window.speechSynthesis.speak(speech);
-    } else {
-      toast.error(
-        "Sorry, it seems your browser doesn't support text to speech"
-      );
-    }
-  };
-
   const updateUserAnswer = async () => {
     if (userAnswer?.length < 10) {
       toast.error("Please provide an answer with a minimum of ten words.");
@@ -105,6 +94,9 @@ const QuestionSection = ({
 
       if (res) {
         toast.success("User answer recorded successfully");
+        if (activeIndex > 5) {
+          setActiveIndex((prev) => prev + 1);
+        }
       }
 
       setUserAnswer("");

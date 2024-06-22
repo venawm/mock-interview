@@ -2,6 +2,7 @@
 
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -12,7 +13,7 @@ const Header = () => {
   return (
     <div className=" flex p-5 md:px-20 items-center justify-between shadow-sm">
       <h1 className="text-primary text-xl lg:text-3xl  font-bold">
-        Interview Sathi
+        <Link href={"/"}>Interview Sathi</Link>
       </h1>
       <ul className="hidden md:flex  gap-6">
         <li
