@@ -76,6 +76,9 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         wiggle: "wiggle 1s ease-in-out infinite",
       },
+      backgroundImage: {
+        img: "url('/grid.svg')",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

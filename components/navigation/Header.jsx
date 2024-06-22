@@ -21,14 +21,14 @@ const Header = () => {
             path == "/dashboard" && "text-primary font-bold"
           }`}
         >
-          Dashboard
+          <Link href="/dashboard">Dashboard</Link>
         </li>
         <li
           className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
-            path == "/dashboard/upgrade" && "text-primary font-bold"
+            path == "/upgrade" && "text-primary font-bold"
           }`}
         >
-          Upgrade
+          <Link href="/upgrade">Upgrade</Link>
         </li>
         <li
           className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
