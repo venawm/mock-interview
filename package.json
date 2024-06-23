@@ -15,7 +15,7 @@
     "@google/generative-ai": "^0.12.0",
     "@neondatabase/serverless": "^0.9.3",
     "@radix-ui/react-collapsible": "^1.1.0",
-    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -28,10 +28,13 @@
     "react-dom": "^18.3.1",
     "react-hook-speech-to-text": "^0.8.0",
     "react-hot-toast": "^2.4.1",
+    "react-scroll": "^1.9.0",
+    "react-scroll-to": "^3.0.0-beta.6",
     "react-webcam": "^7.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "vaul": "^0.9.1"
   },
   "devDependencies": {
     "@types/node": "20.14.2",

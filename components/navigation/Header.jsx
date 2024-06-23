@@ -5,10 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+import MobileNav from "./MobileNav";
 
-const Header = () => {
+const Header = ({ scrollTo }) => {
   const path = usePathname();
-  useEffect(() => {});
 
   return (
     <div className=" flex p-5 md:px-20 items-center justify-between shadow-sm">
@@ -32,20 +32,19 @@ const Header = () => {
         </li>
         <li
           className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
-            path == "/dashboard/questions" && "text-primary font-bold"
-          }`}
-        >
-          Questions
-        </li>
-        <li
-          className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
             path == "/dashboard/faq" && "text-primary font-bold"
           }`}
+          onClick={() => scrollTo()}
         >
           How it Works
         </li>
       </ul>
-      <UserButton />
+      <div className="hidden md:flex">
+        <UserButton />
+      </div>
+      <div className="flex md:hidden">
+        <MobileNav />
+      </div>
     </div>
   );
 };
