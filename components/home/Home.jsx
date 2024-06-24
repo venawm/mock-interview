@@ -46,7 +46,7 @@ const HomePage = () => {
     <div className="text-center">
       <Header scrollTo={scrollToHowItWorks} />
 
-      <div className="p-6 px-6 md:px-24 lg:px-4 bg-img bg-no-repeat bg-cover h-[100vh] flex flex-col pt-28 items-center gap-12">
+      <div className="p-6 px-6 md:px-24 lg:px-4 bg-img bg-no-repeat bg-cover h-[100vh] flex flex-col pt-60 items-center gap-12">
         <h2 className="text-center text-3xl md:text-[4rem] font-bold text-slate-800 leading-none">
           Your Personal AI Interview Coach
         </h2>

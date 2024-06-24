@@ -36,7 +36,8 @@ const Feedback = ({ params }) => {
       } else {
         setFeedbackList(res);
         const total =
-          res.reduce((acc, item) => acc + parseFloat(item.rating), 0) / 5;
+          res.reduce((acc, item) => acc + parseFloat(item.rating), 0) /
+          res.length;
         setRating(total);
       }
     } catch (error) {
@@ -45,17 +46,17 @@ const Feedback = ({ params }) => {
     }
   };
 
-  const reutrnBg = (rating = 0) => {
+  const returnBgClass = (rating) => {
     if (rating < 4) {
-      return "red-500";
+      return "bg-red-500";
     } else if (rating >= 4 && rating < 8) {
-      return "yellow-500";
+      return "bg-yellow-500";
     } else {
-      return "green-500";
+      return "bg-green-500";
     }
   };
 
-  const handleCLick = (index) => {
+  const handleClick = (index) => {
     setLinkIndex((prev) => {
       if (prev.includes(index)) {
         return prev.filter((i) => i !== index);
@@ -71,7 +72,9 @@ const Feedback = ({ params }) => {
         <h2 className="font-bold text-2xl mb-2">Your Interview Feedback</h2>
         <p className="text-lg flex gap-1 items-center">
           Overall Rating:
-          <strong className={`text-${reutrnBg(rating)}`}>
+          <strong
+            className={`text-${returnBgClass(rating).replace("bg-", "")}`}
+          >
             {rating ? (
               <>{rating}/10</>
             ) : (
@@ -95,7 +98,7 @@ const Feedback = ({ params }) => {
             >
               <CollapsibleTrigger
                 className="text-left p-4 border border-slate-100 bg-slate-50 text-slate-800 shadow-sm rounded-md w-full flex justify-between items-center"
-                onClick={() => handleCLick(index)}
+                onClick={() => handleClick(index)}
               >
                 {item.question}
                 <motion.p
@@ -118,10 +121,9 @@ const Feedback = ({ params }) => {
                     <CollapsibleContent className="flex flex-col gap-4 transition">
                       <div className="flex items-start gap-2">
                         <motion.p
-                          className={`bg-${reutrnBg(
+                          className={`${returnBgClass(
                             item.rating
-                          )} shadow-sm rounded-full w-16 h-16 text-white text-md font-bold relative flex justify-center items-center p-4`}
-                          animate={{ backgroundColor: reutrnBg(item.rating) }}
+                          )} shadow-sm rounded-full w-16 h-16 text-white text-md font-bold relative flex justify-center items-center p-4 `}
                           transition={{ duration: 0.5 }}
                         >
                           {item.rating}/10

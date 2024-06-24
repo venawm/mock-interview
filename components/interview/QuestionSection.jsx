@@ -43,7 +43,7 @@ const QuestionSection = ({
         .from(UserAnswer)
         .where(eq(UserAnswer.mockIdRef, mockId));
       if (res.length === 0) {
-        toast.error("Error fetching data, please contact the administrator");
+        return;
       } else {
         setQuestions(res);
       }

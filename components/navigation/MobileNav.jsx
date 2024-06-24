@@ -26,8 +26,23 @@ const MobileNav = () => {
       <SheetContent>
         <SheetHeader>
           <SheetTitle className="flex justify-center gap-4 items-center text-slate-600">
-            <UserButton />
-            {user?.primaryEmailAddress.emailAddress}
+            {user ? (
+              <>
+                <div className="flex justify-center items-center gap-8">
+                  <UserButton />
+                  {user?.primaryEmailAddress.emailAddress}
+                </div>
+              </>
+            ) : (
+              <>
+                <Link
+                  className="text-primary font-bold hover:cursor-pointer transition-all -mb-6"
+                  href="/dashboard"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </SheetTitle>
           <SheetDescription>
             <ul className=" pt-14 flex flex-col  gap-12 items-center">

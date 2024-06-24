@@ -1,21 +1,22 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import MobileNav from "./MobileNav";
+import { Button } from "../ui/button";
 
 const Header = ({ scrollTo }) => {
   const path = usePathname();
-
+  const { user } = useUser();
   return (
-    <div className=" flex p-5 md:px-20 items-center justify-between shadow-sm">
-      <h1 className="text-primary text-xl lg:text-3xl  font-bold">
+    <div className="fixed top-0 left-0 right-0 z-50 flex p-5 md:px-20 items-center justify-between shadow-sm bg-white">
+      <h1 className="text-primary text-xl lg:text-3xl font-bold">
         <Link href={"/"}>Interview Sathi</Link>
       </h1>
-      <ul className="hidden md:flex  gap-6">
+      <ul className="hidden md:flex gap-6">
         <li
           className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
             path == "/dashboard" && "text-primary font-bold"
@@ -36,11 +37,21 @@ const Header = ({ scrollTo }) => {
           }`}
           onClick={() => scrollTo()}
         >
-          How it Works
+          <Link href="/">How it Works</Link>
         </li>
       </ul>
       <div className="hidden md:flex">
-        <UserButton />
+        {user ? (
+          <>
+            <UserButton />
+          </>
+        ) : (
+          <>
+            <Button className="px-8 py-6">
+              <Link href="/dashboard">Sign Up</Link>
+            </Button>
+          </>
+        )}
       </div>
       <div className="flex md:hidden">
         <MobileNav />

@@ -7,7 +7,7 @@ const DashboardLayout = ({ children }) => {
     <div>
       <Toaster />
       <Header />
-      <div className="p-6 px-6 md:px-24 lg:px-38">{children}</div>
+      <div className="p-6 px-6 md:px-24 lg:px-38 pt-20">{children}</div>
     </div>
   );
 };

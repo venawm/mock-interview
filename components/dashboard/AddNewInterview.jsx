@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +33,25 @@ const AddNewInterview = () => {
   const { user } = useUser();
   const router = useRouter();
 
+  useEffect(() => {
+    const checkInterviewLimit = async () => {
+      const interviewCount = await db
+        .select()
+        .from(MockInterview)
+        .where("createdBy", user.primaryEmailAddress.emailAddress)
+        .count();
+
+      if (interviewCount >= 3) {
+        toast.error("You have reached the maximum limit of 3 interviews.");
+        setOpenDialog(false);
+      }
+    };
+
+    if (openDialog) {
+      checkInterviewLimit();
+    }
+  }, [openDialog, user]);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     if (id === "experience") {
@@ -49,64 +68,69 @@ const AddNewInterview = () => {
     const { position, stack, experience } = interviewData;
     if (position.trim().length === 0) {
       toast.error("Job position cannot be empty");
+      setLoading(false);
       return;
     }
     if (!/^[0-9]+$/.test(experience)) {
       toast.error("Experience must be a positive number");
+      setLoading(false);
       return;
     }
     if (!/^[a-zA-Z\s]+$/.test(position)) {
       toast.error("Job role/position must contain only letters and spaces");
+      setLoading(false);
       return;
     }
     if (!/^[a-zA-Z\s,]+$/.test(stack)) {
       toast.error("Tech stack must contain only letters, spaces, and commas");
+      setLoading(false);
       return;
     }
 
-    const inputPrompt = `Job Position:${position}, Job Description:${stack},Years of Expericence:${experience}. Depending on the Job position, Description and years of experiecne give me 5 interview questions along with answer in JSON format. Give me question and answer field on JSON`;
+    const inputPrompt = `Job Position:${position}, Job Description:${stack}, Years of Experience:${experience}. Depending on the Job position, Description and years of experience, give me 5 interview questions along with answers in JSON format. Give me question and answer field on JSON same like this format [{question:'',answer:''},{question:'',answer:''}] strictly`;
 
-    const result = await chatSession.sendMessage(inputPrompt);
-    console.log(result.response.text());
-    const MockJsonResp = result.response
-      .text()
-      .replace("```json", "")
-      .replace("```", "");
-    console.log(JSON.parse(MockJsonResp));
-    // Reset the interview data
+    try {
+      const result = await chatSession.sendMessage(inputPrompt);
+      const resultText = await result.response.text();
+      const MockJsonResp = resultText.replace("```json", "").replace("```", "");
 
-    setJsonResponse(MockJsonResp);
+      try {
+        JSON.parse(MockJsonResp);
+      } catch (error) {
+        toast.error("Error while parsing data, please enter correct values");
+        setLoading(false);
+        return;
+      }
 
-    if (!MockJsonResp) {
-      toast.error("Error while parsing data please enter correct values");
-      return;
+      setJsonResponse(MockJsonResp);
+
+      const res = await db
+        .insert(MockInterview)
+        .values({
+          mockId: uuidv4(),
+          jsonMockResp: MockJsonResp,
+          jobPosition: position,
+          jobDesc: stack,
+          jobExp: experience,
+          createdBy: user.primaryEmailAddress.emailAddress,
+          createdAt: moment().format("DD-MM-YYYY"),
+        })
+        .returning({ mockId: MockInterview.mockId });
+
+      if (res) {
+        setOpenDialog(false);
+        router.push(`/dashboard/interview/${res[0].mockId}`);
+      }
+    } catch (error) {
+      toast.error("Failed to generate interview questions");
+    } finally {
+      setLoading(false);
+      setInterviewData({
+        position: "",
+        stack: "",
+        experience: "",
+      });
     }
-    const res = await db
-      .insert(MockInterview)
-      .values({
-        mockId: uuidv4(),
-        jsonMockResp: MockJsonResp,
-        jobPosition: position,
-        jobDesc: stack,
-        jobExp: experience,
-        createdBy: user.primaryEmailAddress.emailAddress,
-        createdAt: moment().format("DD-MM-YYYY"),
-      })
-      .returning({ mockId: MockInterview.mockId });
-
-    console.log("Inserted Id", res);
-    if (res) {
-      setOpenDialog(false);
-      router.push(`/dashboard/interview/${res[0].mockId}`);
-    }
-
-    setLoading(false);
-    setInterviewData({
-      position: "",
-      stack: "",
-      experience: "",
-    });
-    // setOpenDialog(false); // Close the dialog after submitting
   };
 
   return (
