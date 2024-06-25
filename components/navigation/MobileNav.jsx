@@ -25,10 +25,10 @@ const MobileNav = () => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className="flex justify-center gap-4 items-center text-slate-600">
+          <SheetTitle className="  flex justify-center gap-4 items-center text-slate-600">
             {user ? (
               <>
-                <div className="flex justify-center items-center gap-8">
+                <div className=" pt-10 flex flex-col justify-center items-center gap-2">
                   <UserButton />
                   {user?.primaryEmailAddress.emailAddress}
                 </div>
