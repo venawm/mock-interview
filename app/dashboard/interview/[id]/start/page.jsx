@@ -2,11 +2,10 @@
 
 import QuestionSection from "@/components/interview/QuestionSection";
 import RecordAnswer from "@/components/interview/RecordAnswer";
-import { Button } from "@/components/ui/button";
 import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
 import { eq } from "drizzle-orm";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const StartInterview = ({ params }) => {
   const [interviewData, setInterviewData] = useState();
@@ -26,7 +25,6 @@ const StartInterview = ({ params }) => {
     const res = JSON.parse(result[0].jsonMockResp);
     setInterviewData(result[0]);
     setInterviewQuestion(res);
-    console.log("hehe");
   };
   return (
     <div>

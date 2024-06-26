@@ -1,8 +1,5 @@
 "use client";
-import { db } from "@/utils/db";
-import { MockInterview } from "@/utils/schema";
-import { useUser } from "@clerk/nextjs";
-import { desc, eq } from "drizzle-orm";
+
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "../ui/button";
@@ -15,40 +12,7 @@ TimeAgo.addDefaultLocale(en);
 
 const timeAgo = new TimeAgo("en-US");
 
-const InterviewList = () => {
-  const { user } = useUser();
-  const [interviewList, setInterviewList] = useState([]);
-
-  useEffect(() => {
-    user && getInterviewList();
-  }, [user]);
-
-  const getInterviewList = async () => {
-    try {
-      const result = await db
-        .select()
-        .from(MockInterview)
-        .where(
-          eq(MockInterview.createdBy, user?.primaryEmailAddress.emailAddress)
-        )
-        .orderBy(desc(MockInterview.id));
-
-      if (!result) {
-        toast.error(
-          "An error occurred while connecting to the database. Please contact the administrator."
-        );
-        return;
-      }
-      console.log(result);
-      setInterviewList(result);
-    } catch (error) {
-      toast.error(
-        "An error occurred while fetching your interviews. Please contact the administrator if this issue persists."
-      );
-      console.error(error);
-    }
-  };
-
+const InterviewList = ({ interviewList }) => {
   return (
     <div>
       <h2 className="font-medium text-xl">Your Interviews</h2>

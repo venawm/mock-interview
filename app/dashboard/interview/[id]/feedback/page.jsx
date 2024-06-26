@@ -42,7 +42,6 @@ const Feedback = ({ params }) => {
       }
     } catch (error) {
       toast.error("Error fetching data, please contact the administrator");
-      console.log(error);
     }
   };
 

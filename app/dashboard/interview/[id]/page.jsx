@@ -14,7 +14,6 @@ const Interview = ({ params }) => {
   const [interviewData, setInterviewData] = useState();
   const [webCamEnabled, setWebCamEnabled] = useState(false);
   useEffect(() => {
-    console.log(params);
     getInterviewDetails();
   }, []);
 
@@ -91,7 +90,6 @@ const Interview = ({ params }) => {
                 variant="secondary"
                 onClick={() => {
                   setWebCamEnabled(true);
-                  console.log(interviewData);
                 }}
                 className="hover:shadow-sm hover:scale-105 transition-all active:scale-100 active:shadow-none"
               >

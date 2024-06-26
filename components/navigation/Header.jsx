@@ -47,7 +47,10 @@ const Header = ({ scrollTo }) => {
           </>
         ) : (
           <>
-            <Button className="px-8 py-6">
+            <Button
+              variant="secondary"
+              className="px-8 py-6 text-primary font-bold text-md bg-white hover:border-2 hover:border-primary transition-all"
+            >
               <Link href="/dashboard">Sign Up</Link>
             </Button>
           </>

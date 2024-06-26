@@ -21,7 +21,7 @@ import { useUser } from "@clerk/nextjs";
 import moment from "moment/moment";
 import { useRouter } from "next/navigation";
 
-const AddNewInterview = () => {
+const AddNewInterview = ({ interviewList }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [interviewData, setInterviewData] = useState({
     position: "",
@@ -29,55 +29,42 @@ const AddNewInterview = () => {
     experience: "",
   });
   const [loading, setLoading] = useState(false);
-  const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    const checkInterviewLimit = async () => {
-      const interviewCount = await db
-        .select()
-        .from(MockInterview)
-        .where("createdBy", user.primaryEmailAddress.emailAddress)
-        .count();
-
-      if (interviewCount >= 3) {
-        toast.error("You have reached the maximum limit of 3 interviews.");
-        setOpenDialog(false);
-      }
-    };
-
-    if (openDialog) {
-      checkInterviewLimit();
+    if (openDialog && interviewList?.length >= 3) {
+      toast.error("You have reached the maximum limit of 3 interviews.");
+      setOpenDialog(false);
     }
-  }, [openDialog, user]);
+  }, [openDialog, interviewList]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    if (id === "experience") {
-      if (!/^[0-9]*$/.test(value)) {
-        toast.error("Experience must be a positive number");
-        return;
-      }
+    if (id === "experience" && !/^[0-9]*$/.test(value)) {
+      toast.error("Experience must be a positive number");
+      return;
     }
     setInterviewData((prevData) => ({ ...prevData, [id]: value }));
   };
 
   const handleSubmit = async () => {
     setLoading(true);
+    console.log(interviewData);
     const { position, stack, experience } = interviewData;
-    if (position.trim().length === 0) {
-      toast.error("Job position cannot be empty");
+
+    if (!/^[a-zA-Z\s\-.]+$/.test(position)) {
+      toast.error(
+        "Job role/position must contain only letters, spaces, hyphens, and periods"
+      );
+      console.log("lado");
+      console.log(/^[a-zA-Z\s\-.]+$/.test(position));
       setLoading(false);
       return;
     }
+
     if (!/^[0-9]+$/.test(experience)) {
       toast.error("Experience must be a positive number");
-      setLoading(false);
-      return;
-    }
-    if (!/^[a-zA-Z\s]+$/.test(position)) {
-      toast.error("Job role/position must contain only letters and spaces");
       setLoading(false);
       return;
     }
@@ -101,8 +88,6 @@ const AddNewInterview = () => {
         setLoading(false);
         return;
       }
-
-      setJsonResponse(MockJsonResp);
 
       const res = await db
         .insert(MockInterview)
@@ -139,7 +124,7 @@ const AddNewInterview = () => {
         className="p-10 shadow-sm rounded-lg bg-secondary hover:scale-105 hover:shadow-md cursor-pointer transition-all active:shadow-sm active:scale-100"
         onClick={() => setOpenDialog(!openDialog)}
       >
-        <h2 className="font-bold text-lg text-center ">+ Add New</h2>
+        <h2 className="font-bold text-lg text-center">+ Add New</h2>
       </div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-xs md:max-w-2xl">
@@ -155,6 +140,7 @@ const AddNewInterview = () => {
                   <Input
                     id="position"
                     placeholder="Ex. Frontend Developer"
+                    value={interviewData.position}
                     onChange={handleChange}
                   />
                 </div>
@@ -162,7 +148,8 @@ const AddNewInterview = () => {
                   <label htmlFor="stack">Job Description</label>
                   <Textarea
                     id="stack"
-                    placeholder="Ex.Develop and maintain web applications using Java and React."
+                    placeholder="Ex. Develop and maintain web applications using Java and React."
+                    value={interviewData.stack}
                     onChange={handleChange}
                   />
                 </div>
@@ -172,6 +159,7 @@ const AddNewInterview = () => {
                     id="experience"
                     placeholder="Ex. 5"
                     type="number"
+                    value={interviewData.experience}
                     onChange={handleChange}
                   />
                 </div>
@@ -180,15 +168,16 @@ const AddNewInterview = () => {
             <div className="flex gap-2 justify-end">
               <Button
                 variant="ghost"
-                onClick={() => setOpenDialog(!openDialog)}
+                onClick={() => setOpenDialog(false)}
+                disabled={loading}
               >
                 Cancel
               </Button>
               <Button onClick={handleSubmit} disabled={loading}>
                 {loading ? (
                   <>
-                    <LoaderCircle className=" animate-spin" />
-                    Generating From Ai
+                    <LoaderCircle className="animate-spin" />
+                    Generating From AI
                   </>
                 ) : (
                   "Start Interview"
