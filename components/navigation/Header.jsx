@@ -33,6 +33,13 @@ const Header = ({ scrollTo }) => {
         </li>
         <li
           className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
+            path == "/contact" && "text-primary font-bold"
+          }`}
+        >
+          <Link href="/contact">Contact Us</Link>
+        </li>
+        <li
+          className={`hover:text-primary hover:font-bold hover:cursor-pointer transition-all ${
             path == "/dashboard/faq" && "text-primary font-bold"
           }`}
           onClick={() => scrollTo()}

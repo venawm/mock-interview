@@ -78,6 +78,7 @@ module.exports = {
       },
       backgroundImage: {
         img: "url('/grid.svg')",
+        contact: "url(/contact/flat-design-web-developers.png)",
       },
     },
   },
