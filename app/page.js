@@ -1,10 +1,10 @@
 import HomePage from "@/components/home/Home";
-import MobileNav from "@/components/navigation/MobileNav";
-import Image from "next/image";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function Home() {
   return (
     <main>
+      <SpeedInsights />
       <HomePage />
     </main>
   );
